@@ -1,0 +1,29 @@
+string exercise
+int nr_sets
+int r
+int i
+int last_week
+list reps
+
+ask exercise
+ask nr_sets
+ask last_week
+
+sets nr_sets
+    ask r
+    add r to reps
+done
+
+check sum(reps) > last_week
+    show "New progress on ", exercise, "! +", sum(reps) - last_week, " reps"
+fail
+    show "No progress on ", exercise, " this week"
+done
+
+i = 0
+keep i < len(reps)
+    check reps[i] < 5 or reps[i] > 15
+        show "Set ", i + 1, ": change the weight"
+    done
+    i = i + 1
+done

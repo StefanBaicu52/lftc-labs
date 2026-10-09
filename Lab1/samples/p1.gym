@@ -1,0 +1,16 @@
+int nr_sets
+int r
+list reps
+
+show "How many sets?"
+ask nr_sets
+
+sets nr_sets
+    show "Reps:"
+    ask r
+    add r to reps
+done
+
+show "Total reps: ", sum(reps)
+show "Best set: ", max(reps)
+show "Average: ", sum(reps) / len(reps)

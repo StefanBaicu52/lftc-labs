@@ -1,0 +1,163 @@
+GymLog - Use Case and Choice of Statements
+
+About GymLog
+===========
+GymLog is a small language for keeping track of a workout at the gym.
+After every set you write how many reps you did, and the program tells you the
+total, your best set and if you did better than last week.
+
+The statements have names from the gym instead of the usual ones. "sets" repeats
+something N times, like doing N sets. "keep" goes on while a condition is true.
+"check" tests a condition and "fail" is what happens when it is not true.
+"ask" reads a value and "show" prints it. Every block ends with "done".
+
+
+Types
+=====
+- Simple types:  int, string
+    -> int keeps reps, sets and counters (whole numbers)
+    -> string keeps exercise names and messages ("Squat", "Total reps: ")
+
+- User-defined type:  list
+    -> list keeps the reps of every set, in order (only int values)
+
+  A new list is empty, and every "add" puts one more value at the end.
+  len, sum and max give the number of sets, the total reps and the best set.
+
+
+
+Statements
+==========
+
+[1] Declaration
+   Form:    type identifier
+   Does:    Creates a variable or an empty list.
+   Why:     "reps" must be known as a list before using add or reps[i], and
+            "nr_sets" as a number before doing math with it.
+   Example: int nr_sets
+            string exercise
+            list reps
+
+[2] Assignment
+   Form:    identifier = expression
+            identifier[position] = expression
+   Does:    Gives a new value to a variable or to one element of a list.
+   Why:     Counters and totals change during the workout, and a set that was
+            typed wrong can be fixed.
+   Example: done_reps = 0
+            done_reps = done_reps + r
+            reps[2] = 10
+
+[3] Ask
+   Form:    ask identifier
+   Does:    Reads a value from the keyboard.
+   Why:     Every workout is different, so the number of sets and the reps are
+            typed when the program runs.
+   Example: ask nr_sets
+            ask r
+
+[4] Show
+   Form:    show expression, expression, ...
+   Does:    Prints values and messages on one line.
+   Why:     We need to see the results of the workout.
+   Example: show "Total reps: ", sum(reps)
+            show "Set ", i + 1, ": change the weight"
+
+[5] Add ... to
+   Form:    add expression to list_name
+   Does:    Puts a value at the end of a list.
+   Why:     We don't know from the start how many sets we will do, so the list
+            grows after every set.
+   Example: ask r
+            add r to reps
+
+[6] Check - fail - done
+   Form:    check condition statements [fail statements] done
+   Does:    Runs some statements only if the condition is true. The fail part
+            is optional. Conditions can be joined with "and" / "or".
+   Why:     The program has to decide, for example if there was progress or if
+            the weight is too light or too heavy.
+   Example: check sum(reps) > last_week
+                show "New progress!"
+            fail
+                show "No progress this week"
+            done
+
+            check reps[i] < 5 or reps[i] > 15
+                show "Change the weight"
+            done
+
+[7] Sets - done
+   Form:    sets expression statements done
+   Does:    Repeats the statements a fixed number of times.
+   Why:     This is how a workout looks: the same thing for N sets. No counter
+            is needed, so it is shorter than keep.
+   Example: sets nr_sets
+                ask r
+                add r to reps
+            done
+
+[8] Keep - done
+   Form:    keep condition statements done
+   Does:    Repeats the statements while the condition is true.
+   Why:     Sometimes we don't know how many times to repeat, for example doing
+            sets until a target of 50 reps is reached.
+   Example: keep done_reps < target
+                ask r
+                done_reps = done_reps + r
+            done
+
+[9] Element at a position
+   Form:    list_name[position]
+   Does:    Gives one element of a list. The first position is 0.
+   Why:     To look at or fix one set of the workout.
+   Example: show reps[0]
+            reps[1] = 12
+
+[10] List functions
+   Form:    len(list)    number of sets
+            sum(list)    total reps
+            max(list)    best set
+   Does:    Give the results of the workout in one step.
+   Why:     These are the questions after every workout. Without them each one
+            would need its own loop.
+   Example: show "Best set: ", max(reps)
+            show "Average: ", sum(reps) / len(reps)
+
+
+Full example
+============
+int nr_sets
+int r
+list reps
+
+show "How many sets?"
+ask nr_sets
+
+sets nr_sets
+    show "Reps:"
+    ask r
+    add r to reps
+done
+
+show "Total reps: ", sum(reps)
+show "Best set: ", max(reps)
+show "Average: ", sum(reps) / len(reps)
+
+Input: 4, then 12 10 10 8
+Output (after the prompts):
+    Total reps: 40
+    Best set: 12
+    Average: 10
+
+
+Notes
+=====
+- Only int values can go in a list.
+- "/" gives a whole number: 7 / 2 = 3.
+- sum and max of an empty list are 0.
+- The words sets, done, check etc. are reserved, so a variable is called
+  nr_sets, not sets.
+- There is one statement on each line and no ";". Every block ends with "done".
+- Parentheses are used with the functions, like sum(reps), and to group a
+  calculation: in (a + b) * 2 the sum is computed first.

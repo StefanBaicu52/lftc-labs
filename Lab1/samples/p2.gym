@@ -1,0 +1,18 @@
+int target
+int done_reps
+int r
+int set_nr
+
+show "Target reps for today?"
+ask target
+done_reps = 0
+set_nr = 0
+
+keep done_reps < target
+    set_nr = set_nr + 1
+    show "Set ", set_nr, " reps:"
+    ask r
+    done_reps = done_reps + r
+done
+
+show "Target reached in ", set_nr, " sets"

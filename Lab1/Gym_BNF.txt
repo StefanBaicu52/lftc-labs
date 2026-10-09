@@ -1,0 +1,72 @@
+GymLog - BNF
+
+
+<letter> ::= "a" | "b" | ... | "z" | "A" | "B" | ... | "Z"
+<nonzero_digit> ::= "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+<digit> ::= "0" | <nonzero_digit>
+
+<identifier> ::= <letter> <identifier_rest>
+<identifier_rest> ::= <identifier_char> <identifier_rest> | <empty>
+<identifier_char> ::= <letter> | <digit> | "_"
+
+<int_const> ::= "0" | <nonzero_digit> <digits>
+<digits> ::= <digit> <digits> | <empty>
+
+<string_const> ::= '"' <string_chars> '"'
+<string_chars> ::= <string_char> <string_chars> | <empty>
+<string_char> ::= <letter> | <digit> | " " | "_" | "." | "," | ":" | "!" | "?" | "-" | "+" | "/"
+
+<assign_operator> ::= "="
+<arithmetic_operator> ::= "+" | "-" | "*" | "/" | "%"
+<relational_operator> ::= "==" | "!=" | "<" | "<=" | ">" | ">="
+<logical_operator> ::= "and" | "or"
+
+<separator> ::= "(" | ")" | "[" | "]" | "," | " " | <tab> | <newline>
+
+
+<program> ::= <stmt_list>
+
+<stmt_list> ::= <stmt> <stmt_list> | <empty>
+
+<stmt> ::= <decl_stmt> | <assign_stmt> | <ask_stmt> | <show_stmt> | <add_stmt>
+         | <check_stmt> | <keep_stmt> | <sets_stmt>
+
+<decl_stmt> ::= <type> <identifier>
+<type> ::= "int" | "string" | "list"
+
+<assign_stmt> ::= <variable> "=" <expression>
+<variable> ::= <identifier> <index>
+<index> ::= "[" <expression> "]" | <empty>
+
+<ask_stmt> ::= "ask" <variable>
+
+<show_stmt> ::= "show" <expression> <show_rest>
+<show_rest> ::= "," <expression> <show_rest> | <empty>
+
+<add_stmt> ::= "add" <expression> "to" <identifier>
+
+<check_stmt> ::= "check" <condition> <stmt_list> <fail_part> "done"
+<fail_part> ::= "fail" <stmt_list> | <empty>
+
+<keep_stmt> ::= "keep" <condition> <stmt_list> "done"
+
+<sets_stmt> ::= "sets" <expression> <stmt_list> "done"
+
+<condition> ::= <relation> <condition_rest>
+<condition_rest> ::= <logical_operator> <relation> <condition_rest> | <empty>
+<relation> ::= <expression> <relational_operator> <expression>
+
+<expression> ::= <term> <expression_rest>
+<expression_rest> ::= <add_op> <term> <expression_rest> | <empty>
+<add_op> ::= "+" | "-"
+
+<term> ::= <factor> <term_rest>
+<term_rest> ::= <mul_op> <factor> <term_rest> | <empty>
+<mul_op> ::= "*" | "/" | "%"
+
+<factor> ::= <variable> | <int_const> | <string_const> | "(" <expression> ")" | <list_function> "(" <identifier> ")"
+<list_function> ::= "len" | "sum" | "max"
+
+RESERVED WORDS
+==============
+int, string, list, ask, show, add, to, check, fail, keep, sets, done, and, or, len, sum, max
